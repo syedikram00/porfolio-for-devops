@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Syed Ikram — DevOps &amp; Cloud Engineer (in progress)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-deep:#0b1626;
+    --bg-panel:#0f1d33;
+    --bg-panel-2:#11233e;
+    --line:#26405f;
+    --line-soft:#1a2e4a;
+    --ink:#e7eef5;
+    --ink-dim:#8fa3bd;
+    --ink-faint:#5b7290;
+    --accent:#5eead4;
+    --accent-dim:#2c8d80;
+    --warm:#ffb454;
+    --radius:2px;
+  }
+
+  *{ box-sizing:border-box; margin:0; padding:0; }
+
+  html{ scroll-behavior:smooth; }
+
+  body{
+    background:
+      linear-gradient(var(--bg-deep), var(--bg-deep)) ,
+      repeating-linear-gradient(0deg, var(--line-soft) 0, var(--line-soft) 1px, transparent 1px, transparent 64px),
+      repeating-linear-gradient(90deg, var(--line-soft) 0, var(--line-soft) 1px, transparent 1px, transparent 64px);
+    color:var(--ink);
+    font-family:'IBM Plex Sans', sans-serif;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  ::selection{ background:var(--accent); color:#04241f; }
+
+  a{ color:inherit; text-decoration:none; }
+
+  .mono{ font-family:'JetBrains Mono', monospace; }
+
+  .eyebrow{
+    font-family:'JetBrains Mono', monospace;
+    font-size:0.72rem;
+    letter-spacing:0.18em;
+    text-transform:uppercase;
+    color:var(--accent);
+    display:flex;
+    align-items:center;
+    gap:0.6rem;
+    margin-bottom:1rem;
+  }
+  .eyebrow::before{
+    content:"";
+    width:18px; height:1px;
+    background:var(--accent);
+    display:inline-block;
+  }
+
+  .wrap{
+    max-width:1080px;
+    margin:0 auto;
+    padding:0 1.5rem;
+  }
+
+  /* ---------- NAV ---------- */
+  header.nav{
+    position:sticky; top:0; z-index:50;
+    background:rgba(11,22,38,0.86);
+    backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line);
+  }
+  .nav-inner{
+    max-width:1080px; margin:0 auto; padding:0 1.5rem;
+    height:64px;
+    display:flex; align-items:center; justify-content:space-between;
+  }
+  .nav-id{
+    font-family:'JetBrains Mono', monospace;
+    font-weight:700;
+    font-size:0.95rem;
+    letter-spacing:0.02em;
+    display:flex; align-items:center; gap:0.5rem;
+  }
+  .nav-id .dot{
+    width:8px; height:8px; border-radius:50%;
+    background:var(--accent);
+    box-shadow:0 0 8px var(--accent);
+    flex:none;
+  }
+  nav.links{ display:flex; gap:2rem; }
+  nav.links a{
+    font-family:'JetBrains Mono', monospace;
+    font-size:0.8rem;
+    letter-spacing:0.06em;
+    color:var(--ink-dim);
+    text-transform:uppercase;
+    position:relative;
+    padding:4px 0;
+    transition:color .2s ease;
+  }
+  nav.links a:hover{ color:var(--ink); }
+  nav.links a::after{
+    content:"";
+    position:absolute; left:0; bottom:0;
+    width:0; height:1px; background:var(--accent);
+    transition:width .25s ease;
+  }
+  nav.links a:hover::after{ width:100%; }
+
+  .nav-toggle{ display:none; }
+
+  /* ---------- SECTION SCAFFOLDING ---------- */
+  section{
+    position:relative;
+    padding:6.5rem 0;
+    border-bottom:1px solid var(--line-soft);
+  }
+  section:last-of-type{ border-bottom:none; }
+
+  .panel{
+    position:relative;
+    border:1px solid var(--line);
+    background:linear-gradient(180deg, var(--bg-panel), var(--bg-panel-2));
+    padding:2.25rem;
+  }
+  .panel::before, .panel::after,
+  .corner-tl, .corner-tr, .corner-bl, .corner-br{
+    content:"";
+    position:absolute;
+    width:14px; height:14px;
+    border:1px solid var(--accent);
+    opacity:0.85;
+  }
+  .panel::before{ top:-1px; left:-1px; border-right:none; border-bottom:none; }
+  .panel::after{ bottom:-1px; right:-1px; border-left:none; border-top:none; }
+  .panel .corner-tr{ top:-1px; right:-1px; border-left:none; border-bottom:none; }
+  .panel .corner-bl{ bottom:-1px; left:-1px; border-right:none; border-top:none; }
+
+  /* ---------- HERO ---------- */
+  .hero{ padding-top:5rem; padding-bottom:6rem; }
+  .hero-grid{
+    display:grid;
+    grid-template-columns:1fr;
+    gap:2rem;
+  }
+  .hero h1{
+    font-family:'JetBrains Mono', monospace;
+    font-weight:800;
+    font-size:clamp(2.2rem, 6vw, 3.6rem);
+    line-height:1.08;
+    letter-spacing:-0.01em;
+    margin-bottom:1.1rem;
+  }
+  .hero h1 .cursor{
+    display:inline-block;
+    width:0.55ch;
+    background:var(--accent);
+    margin-left:4px;
+    animation:blink 1.05s steps(1) infinite;
+  }
+  @keyframes blink{ 50%{ opacity:0; } }
+
+  .role-stack{
+    display:flex; flex-direction:column; gap:0.5rem;
+    margin-bottom:2rem;
+  }
+  .role-line{
+    font-family:'JetBrains Mono', monospace;
+    font-size:1.02rem;
+    color:var(--ink-dim);
+    display:flex; align-items:baseline; gap:0.6rem;
+  }
+  .role-line .tag{
+    font-size:0.68rem;
+    color:var(--bg-deep);
+    background:var(--accent);
+    padding:1px 6px;
+    border-radius:2px;
+    letter-spacing:0.04em;
+  }
+  .role-line.warm .tag{ background:var(--warm); }
+
+  .btn{
+    display:inline-flex;
+    align-items:center;
+    gap:0.6rem;
+    font-family:'JetBrains Mono', monospace;
+    font-size:0.85rem;
+    letter-spacing:0.04em;
+    text-transform:uppercase;
+    border:1px solid var(--accent);
+    color:var(--accent);
+    padding:0.85rem 1.5rem;
+    transition:background .2s ease, color .2s ease;
+  }
+  .btn:hover{ background:var(--accent); color:var(--bg-deep); }
+  .btn .arrow{ transition:transform .2s ease; }
+  .btn:hover .arrow{ transform:translateX(4px); }
+
+  .hero-meta{
+    margin-top:3.5rem;
+    display:flex;
+    gap:2.5rem;
+    flex-wrap:wrap;
+    font-family:'JetBrains Mono', monospace;
+    font-size:0.75rem;
+    color:var(--ink-faint);
+    border-top:1px solid var(--line-soft);
+    padding-top:1.25rem;
+  }
+  .hero-meta span b{ color:var(--ink-dim); font-weight:500; }
+
+  /* ---------- ABOUT ---------- */
+  .about-grid{
+    display:grid;
+    grid-template-columns:1.1fr 0.9fr;
+    gap:3rem;
+    align-items:start;
+  }
+  .about-grid p{
+    color:var(--ink-dim);
+    max-width:46ch;
+    margin-bottom:1.5rem;
+  }
+  .checklist{ list-style:none; }
+  .checklist li{
+    display:flex; align-items:center; gap:0.8rem;
+    font-family:'JetBrains Mono', monospace;
+    font-size:0.9rem;
+    padding:0.85rem 0;
+    border-bottom:1px solid var(--line-soft);
+  }
+  .checklist li:last-child{ border-bottom:none; }
+  .checklist .mark{
+    width:20px; height:20px;
+    border:1px solid var(--accent);
+    display:flex; align-items:center; justify-content:center;
+    font-size:0.7rem; color:var(--accent);
+    flex:none;
+  }
+  .checklist li.pending .mark{
+    border-color:var(--warm); color:var(--warm);
+  }
+  .checklist li.pending{ color:var(--ink-dim); }
+  .checklist .status{
+    margin-left:auto;
+    font-size:0.65rem;
+    color:var(--ink-faint);
+    letter-spacing:0.08em;
+  }
+
+  .goal-line{
+    margin-top:2rem;
+    padding:1.25rem 1.5rem;
+    border-left:2px solid var(--accent);
+    background:var(--bg-panel);
+    color:var(--ink);
+    font-size:0.98rem;
+  }
+
+  /* ---------- SKILLS ---------- */
+  .skills-grid{
+    display:grid;
+    grid-template-columns:repeat(5, 1fr);
+    gap:1px;
+    background:var(--line);
+    border:1px solid var(--line);
+  }
+  .skill-card{
+    background:var(--bg-panel);
+    padding:1.75rem 1rem;
+    display:flex; flex-direction:column; gap:0.9rem;
+    align-items:flex-start;
+    transition:background .2s ease;
+  }
+  .skill-card:hover{ background:var(--bg-panel-2); }
+  .skill-card .idx{
+    font-family:'JetBrains Mono', monospace;
+    font-size:0.7rem;
+    color:var(--ink-faint);
+  }
+  .skill-card .name{
+    font-family:'JetBrains Mono', monospace;
+    font-weight:700;
+    font-size:0.95rem;
+  }
+  .skill-card svg{ width:26px; height:26px; stroke:var(--accent); fill:none; stroke-width:1.4; }
+
+  /* ---------- PROJECTS ---------- */
+  .projects-grid{
+    display:grid;
+    grid-template-columns:repeat(2, 1fr);
+    gap:1.75rem;
+  }
+  .project-card{
+    border:1px solid var(--line);
+    background:var(--bg-panel);
+    padding:2rem;
+    display:flex; flex-direction:column; height:100%;
+  }
+  .project-card .ptag{
+    font-family:'JetBrains Mono', monospace;
+    font-size:0.68rem;
+    color:var(--bg-deep);
+    background:var(--accent);
+    width:fit-content;
+    padding:2px 8px;
+    margin-bottom:1.1rem;
+    letter-spacing:0.06em;
+  }
+  .project-card h3{
+    font-family:'JetBrains Mono', monospace;
+    font-size:1.2rem;
+    margin-bottom:0.9rem;
+  }
+  .project-card p{ color:var(--ink-dim); font-size:0.92rem; margin-bottom:1rem; }
+  .project-card ul{
+    list-style:none;
+    margin-top:auto;
+    display:flex; flex-wrap:wrap; gap:0.5rem;
+    padding-top:1rem;
+    border-top:1px solid var(--line-soft);
+  }
+  .project-card ul li{
+    font-family:'JetBrains Mono', monospace;
+    font-size:0.7rem;
+    color:var(--ink-faint);
+    border:1px solid var(--line);
+    padding:3px 8px;
+  }
+
+  /* ---------- CONTACT ---------- */
+  .contact-grid{
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap:1px;
+    background:var(--line);
+    border:1px solid var(--line);
+  }
+  .contact-card{
+    background:var(--bg-panel);
+    padding:2.25rem 1.5rem;
+    display:flex; flex-direction:column; gap:0.75rem;
+    transition:background .2s ease;
+  }
+  .contact-card:hover{ background:var(--bg-panel-2); }
+  .contact-card .label{
+    font-family:'JetBrains Mono', monospace;
+    font-size:0.68rem;
+    letter-spacing:0.1em;
+    color:var(--ink-faint);
+    text-transform:uppercase;
+  }
+  .contact-card .value{
+    font-family:'JetBrains Mono', monospace;
+    font-size:1rem;
+    color:var(--ink);
+    display:flex; align-items:center; gap:0.5rem;
+  }
+  .contact-card .value .go{ color:var(--accent); transition:transform .2s ease; }
+  .contact-card:hover .value .go{ transform:translateX(4px); }
+  .contact-card .empty{ color:var(--ink-faint); font-style:italic; font-size:0.85rem; }
+
+  /* ---------- FOOTER ---------- */
+  footer{
+    padding:2.5rem 0;
+  }
+  footer .wrap{
+    display:flex; justify-content:space-between; align-items:center;
+    flex-wrap:wrap; gap:1rem;
+  }
+  footer p{
+    font-family:'JetBrains Mono', monospace;
+    font-size:0.72rem;
+    color:var(--ink-faint);
+    letter-spacing:0.04em;
+  }
+  footer .stack-chip{
+    display:flex; gap:0.4rem;
+  }
+  footer .stack-chip span{
+    border:1px solid var(--line);
+    padding:2px 7px;
+    font-family:'JetBrains Mono', monospace;
+    font-size:0.65rem;
+    color:var(--ink-faint);
+  }
+
+  /* ---------- REVEAL ---------- */
+  .reveal{
+    opacity:0;
+    transform:translateY(14px);
+    transition:opacity .6s ease, transform .6s ease;
+  }
+  .reveal.in{ opacity:1; transform:translateY(0); }
+
+  /* ---------- RESPONSIVE ---------- */
+  @media (max-width:860px){
+    .about-grid{ grid-template-columns:1fr; }
+    .skills-grid{ grid-template-columns:repeat(2, 1fr); }
+    .projects-grid{ grid-template-columns:1fr; }
+    .contact-grid{ grid-template-columns:1fr; }
+  }
+  @media (max-width:640px){
+    nav.links{
+      position:fixed; top:64px; left:0; right:0;
+      flex-direction:column; gap:0;
+      background:var(--bg-deep);
+      border-bottom:1px solid var(--line);
+      max-height:0; overflow:hidden;
+      transition:max-height .3s ease;
+    }
+    nav.links.open{ max-height:240px; }
+    nav.links a{ padding:1rem 1.5rem; border-bottom:1px solid var(--line-soft); }
+    .nav-toggle{
+      display:flex; flex-direction:column; gap:4px;
+      background:none; border:none; cursor:pointer; padding:8px;
+    }
+    .nav-toggle span{ width:20px; height:1.5px; background:var(--ink); }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ animation:none !important; transition:none !important; }
+  }
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="nav-inner">
+    <div class="nav-id"><span class="dot"></span>SYED IKRAM</div>
+    <nav class="links" id="navLinks">
+      <a href="#home">Home</a>
+      <a href="#about">About</a>
+      <a href="#projects">Projects</a>
+      <a href="#contact">Contact</a>
+    </nav>
+    <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<!-- ================= HERO ================= -->
+<section class="hero" id="home">
+  <div class="wrap hero-grid">
+    <div class="eyebrow reveal">SCHEMATIC — 00 / OVERVIEW</div>
+    <h1 class="reveal">Hi, I'm Syed Ikram<span class="cursor mono">&nbsp;</span></h1>
+    <div class="role-stack reveal">
+      <div class="role-line"><span class="tag">CURRENT</span> Mechanical Engineering Student</div>
+      <div class="role-line warm"><span class="tag">BUILDING TOWARD</span> Aspiring DevOps &amp; Cloud Engineer</div>
+    </div>
+    <a href="https://github.com/" target="_blank" rel="noopener" class="btn reveal">View GitHub <span class="arrow mono">→</span></a>
+
+    <div class="hero-meta reveal">
+      <span>STATUS: <b>actively building</b></span>
+      <span>STACK: <b>Linux · Git · AWS</b></span>
+      <span>BASIS: <b>mechanical systems → infra systems</b></span>
+    </div>
+  </div>
+</section>
+
+<!-- ================= ABOUT ================= -->
+<section id="about">
+  <div class="wrap about-grid">
+    <div>
+      <div class="eyebrow reveal">SCHEMATIC — 01 / ABOUT</div>
+      <p class="reveal">Currently learning DevOps from scratch — applying the same instinct that drew me to mechanical engineering: take a system apart, understand every load-bearing piece, and put it back together better.</p>
+      <div class="goal-line reveal">My goal is to become a DevOps Engineer by building real-world projects, not just collecting certificates.</div>
+    </div>
+    <ul class="checklist reveal">
+      <li><span class="mark">✓</span> Linux <span class="status mono">VERIFIED</span></li>
+      <li><span class="mark">✓</span> Networking <span class="status mono">VERIFIED</span></li>
+      <li><span class="mark">✓</span> Git <span class="status mono">VERIFIED</span></li>
+      <li class="pending"><span class="mark">~</span> Bash <span class="status mono">IN PROGRESS</span></li>
+    </ul>
+  </div>
+</section>
+
+<!-- ================= SKILLS ================= -->
+<section id="skills">
+  <div class="wrap">
+    <div class="eyebrow reveal">SCHEMATIC — 02 / SKILLS</div>
+    <div class="skills-grid reveal">
+      <div class="skill-card">
+        <span class="idx">01</span>
+        <svg viewBox="0 0 24 24"><path d="M4 18V6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12"/><path d="M2 18h20l-2 4H4l-2-4z"/></svg>
+        <span class="name">Linux</span>
+      </div>
+      <div class="skill-card">
+        <span class="idx">02</span>
+        <svg viewBox="0 0 24 24"><circle cx="6" cy="6" r="2.5"/><circle cx="6" cy="18" r="2.5"/><circle cx="18" cy="12" r="2.5"/><path d="M6 8.5v7M8 6h4a4 4 0 0 1 4 4"/></svg>
+        <span class="name">Git</span>
+      </div>
+      <div class="skill-card">
+        <span class="idx">03</span>
+        <svg viewBox="0 0 24 24"><path d="M12 2 2 8.5 12 15l10-6.5L12 2z"/><path d="M2 15.5 12 22l10-6.5M2 12l10 6.5L22 12"/></svg>
+        <span class="name">GitHub</span>
+      </div>
+      <div class="skill-card">
+        <span class="idx">04</span>
+        <svg viewBox="0 0 24 24"><path d="M16 16a4 4 0 0 0 0-8 5 5 0 0 0-9.6-1.5A4.5 4.5 0 0 0 6.5 16H16z"/></svg>
+        <span class="name">AWS</span>
+      </div>
+      <div class="skill-card">
+        <span class="idx">05</span>
+        <svg viewBox="0 0 24 24"><circle cx="5" cy="12" r="2"/><circle cx="19" cy="6" r="2"/><circle cx="19" cy="18" r="2"/><path d="M7 12h6M13 12l4-4.5M13 12l4 4.5"/></svg>
+        <span class="name">Networking</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= PROJECTS ================= -->
+<section id="projects">
+  <div class="wrap">
+    <div class="eyebrow reveal">SCHEMATIC — 03 / PROJECTS</div>
+    <div class="projects-grid">
+      <div class="project-card reveal">
+        <span class="ptag mono">CASE STUDY</span>
+        <h3>Linux Server Audit</h3>
+        <p>Investigated a simulated production Linux server — analyzed storage, permissions, logs, and running processes to trace down the source of a misconfiguration.</p>
+        <ul>
+          <li>storage</li><li>permissions</li><li>logs</li><li>processes</li>
+        </ul>
+      </div>
+      <div class="project-card reveal">
+        <span class="ptag mono">DEPLOYMENT</span>
+        <h3>AWS S3 Portfolio Deployment</h3>
+        <p>Hosted this portfolio using Git, GitHub Actions, and AWS S3 — every push to main triggers an automatic deployment, no manual upload required.</p>
+        <ul>
+          <li>Git</li><li>GitHub Actions</li><li>AWS S3</li><li>CI/CD</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= CONTACT ================= -->
+<section id="contact">
+  <div class="wrap">
+    <div class="eyebrow reveal">SCHEMATIC — 04 / CONTACT</div>
+    <div class="contact-grid reveal">
+      <a class="contact-card" href="https://github.com/" target="_blank" rel="noopener">
+        <span class="label">Channel 01</span>
+        <span class="value">GitHub <span class="go mono">→</span></span>
+      </a>
+      <div class="contact-card">
+        <span class="label">Channel 02</span>
+        <span class="value empty">LinkedIn — coming soon</span>
+      </div>
+      <a class="contact-card" href="mailto:your.email@example.com">
+        <span class="label">Channel 03</span>
+        <span class="value">Email <span class="go mono">→</span></span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ================= FOOTER ================= -->
+<footer>
+  <div class="wrap">
+    <p>Built using HTML, CSS, GitHub Actions &amp; AWS S3.</p>
+    <div class="stack-chip">
+      <span>HTML</span><span>CSS</span><span>GH ACTIONS</span><span>S3</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // mobile nav toggle
+  const navToggle = document.getElementById('navToggle');
+  const navLinks = document.getElementById('navLinks');
+  navToggle.addEventListener('click', () => navLinks.classList.toggle('open'));
+  navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', () => navLinks.classList.remove('open')));
+
+  // scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('in');
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15 });
+  reveals.forEach(el => io.observe(el));
+</script>
+
+</body>
+</html>
