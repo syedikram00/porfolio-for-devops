@@ -22,7 +22,7 @@ jobs:
 
       - name: Upload Website to S3
         run: |
-          aws s3 sync . s3://github-portfolio-devops
+          aws s3 sync . s3://github-portfolio-devops \
             --delete \
             --exclude ".git/*" \
             --exclude ".github/*" \
